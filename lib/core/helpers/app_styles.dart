@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:napon/helpers/app_colors.dart';
+import 'package:napon/core/helpers/app_colors.dart';
 import 'package:sizer/sizer.dart';
 
 class AppStyles {
@@ -30,9 +30,7 @@ class AppStyles {
       fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w400);
 
   static final appLightTextStyle = GoogleFonts.poppins(
-      fontSize: 2.2.h,
-      color: AppColors.colorTextLight,
-      fontWeight: FontWeight.bold);
+      fontSize: 2.2.h, color: Colors.white, fontWeight: FontWeight.bold);
 
   static final appTextStyle = GoogleFonts.poppins(
     fontSize: 2.2.h,

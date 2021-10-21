@@ -4,7 +4,9 @@ import 'package:sizer/sizer.dart';
 
 class ConnectionWidget extends StatelessWidget {
   final Widget childWidget;
-  const ConnectionWidget({Key? key, required this.childWidget})
+  final Widget? bottomNavigator;
+  const ConnectionWidget(
+      {Key? key, required this.childWidget, this.bottomNavigator})
       : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class ConnectionWidget extends StatelessWidget {
             );
           },
           child: Container()),
+      bottomNavigationBar: bottomNavigator,
     );
   }
 }

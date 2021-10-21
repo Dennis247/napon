@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:napon/home/home_viewmodel.dart';
+import 'package:napon/core/helpers/constants.dart';
 import 'package:napon/widgets/baseWidgets/connection_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'home_viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _mapStyle = "";
+  //String _mapStyle = "";
 
   // ignore: unused_field
   BitmapDescriptor? _startIcon;
@@ -49,9 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
       _endIcon = onValue;
     });
 
-    rootBundle.loadString('assets/images/map_style.txt').then((string) {
-      _mapStyle = string;
-    });
+    // rootBundle.loadString('assets/images/map_style.txt').then((string) {
+    //   _mapStyle = string;
+    // });
   }
 
   @override
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             initialCameraPosition: _lagos,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
-              controller.setMapStyle(_mapStyle);
+              controller.setMapStyle(Constants.mapStyle);
               context.read<HomeViewModel>().getCurrentPosition(controller);
             },
           ),

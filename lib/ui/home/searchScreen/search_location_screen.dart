@@ -1,22 +1,26 @@
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
-import 'package:napon/helpers/app_colors.dart';
-import 'package:napon/helpers/app_styles.dart';
-import 'package:napon/home/searchLocation/search_location_viewmodel.dart';
-import 'package:napon/model/autosugesstion.dart';
+import 'package:napon/core/helpers/app_colors.dart';
+import 'package:napon/core/helpers/app_styles.dart';
+import 'package:napon/core/model/address.dart';
+import 'package:napon/core/model/autosugesstion.dart';
+import 'package:napon/ui/home/placePickerScreen/place_picker_screen.dart';
+import 'package:napon/ui/home/searchScreen/search_location_viewmodel.dart';
 import 'package:napon/widgets/baseWidgets/connection_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 
 class SearchLocationScreen extends StatefulWidget {
-  const SearchLocationScreen({Key? key, required this.initialLocation})
+  static const routeName = "place-picker-screen";
+  const SearchLocationScreen({Key? key, required this.initialAddress})
       : super(key: key);
 
   @override
   State<SearchLocationScreen> createState() => _SearchLocationScreenState();
-
-  final String initialLocation;
+  final Address initialAddress;
 }
 
 class _SearchLocationScreenState extends State<SearchLocationScreen> {
@@ -28,12 +32,16 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
 
   FocusNode focusDestination = FocusNode();
   bool focused = false;
+  PickResult? _pickResult;
 
   @override
   void initState() {
-    // TODO: implement initState
-    _myLoctionController.text = widget.initialLocation;
-
+    _myLoctionController.text = widget.initialAddress.placeFormattedAddress!;
+    context.read<SearchLocationViewModel>().setIsMyLocationSelected(true);
+    context.read<SearchLocationViewModel>().setSugesstion(AutoSuggestion(
+        placeId: widget.initialAddress.placeId!,
+        mainText: widget.initialAddress.placeName!,
+        secondaryText: widget.initialAddress.placeFormattedAddress!));
     super.initState();
   }
 
@@ -73,11 +81,11 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                   // vm.setIsMyLocationSelected(isMylocation);
                   vm.searchPlace(value);
                 },
-                focusNode: focusNode ?? null,
+                focusNode: focusNode,
                 style: AppStyles.appTextStyle,
                 decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.only(top: 8, right: 8, left: 10, bottom: 8),
+                    contentPadding: const EdgeInsets.only(
+                        top: 8, right: 8, left: 10, bottom: 8),
                     hintText: hintText,
                     hintStyle: AppStyles.appHintTextStyle,
                     fillColor: Colors.grey[300],
@@ -95,19 +103,17 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
   Widget suggestionTile(AutoSuggestion autoSuggestion) {
     return TextButton(
       onPressed: () async {
-        //  CustomDialogue.showCustomDialogue(context);
         final vm = context.read<SearchLocationViewModel>();
 
         if (vm.isMylocationSelected) {
-          await vm.getPlaceDetails(autoSuggestion.placeId);
+          vm.setSugesstion(autoSuggestion);
           _myLoctionController.text = autoSuggestion.mainText;
           FocusScope.of(context).requestFocus(focusDestination);
           vm.setIsMyLocationSelected(false);
         } else {
-          await vm.getPlaceDetails(autoSuggestion.placeId);
+          vm.setSugesstion(autoSuggestion);
           FocusScope.of(context).unfocus();
           _myDestinationController.text = autoSuggestion.mainText;
-          vm.setMyDestination(autoSuggestion.mainText);
         }
       },
       child: Padding(
@@ -231,7 +237,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                                 thickness: 1.0,
                               ),
                           shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
+                          physics: const ClampingScrollPhysics(),
                           itemCount: vm.autoSuggestionsList.length);
                     },
                   )),
@@ -239,6 +245,60 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
           ],
         ),
       ),
+      bottomNavigator: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () async {
+          _pickResult = await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const PlacePickerScreen()));
+
+          if (_pickResult != null) {
+            var vm = context.read<SearchLocationViewModel>();
+            if (vm.isMylocationSelected) {
+              _myLoctionController.text = _pickResult!.formattedAddress!;
+              FocusScope.of(context).requestFocus(focusDestination);
+            } else {
+              _myDestinationController.text = _pickResult!.formattedAddress!;
+              FocusScope.of(context).unfocus();
+            }
+
+            vm.setSugesstion(
+              AutoSuggestion(
+                  placeId: _pickResult!.placeId!,
+                  mainText: _pickResult!.formattedAddress!,
+                  secondaryText: _pickResult!.formattedAddress!),
+            );
+          }
+        },
+        child: Container(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(FontAwesomeIcons.mapPin,
+                  size: 2.3.h, color: AppColors.primaryColor),
+              SizedBox(
+                width: 2.0.w,
+              ),
+              Text("Choose on map", style: AppStyles.appHintTextStyle)
+            ],
+          ),
+          height: 8.0.h,
+          width: 100.0.w,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x29000000),
+                offset: Offset(0, -5),
+                blurRadius: 10,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
+
+class Keys {}

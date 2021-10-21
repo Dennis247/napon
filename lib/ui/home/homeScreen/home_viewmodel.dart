@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:napon/model/address.dart';
-import 'package:napon/services/map_services.dart';
+import 'package:napon/core/model/address.dart';
+import 'package:napon/core/services/map_services.dart';
 //import 'package:napon/model/address.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  Position? _currentPosition;
+  Position? _currentPosition = Position(
+      latitude: 6.5244,
+      longitude: 3.3792,
+      timestamp: null,
+      accuracy: 0.0,
+      altitude: 0.0,
+      heading: 0.0,
+      speed: 0.0,
+      speedAccuracy: 0.0);
+
   Position? get currentPosition => _currentPosition;
 
   Address? _pickUpAddress;
