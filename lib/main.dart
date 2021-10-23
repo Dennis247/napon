@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:napon/core/helpers/locator.dart';
 import 'package:napon/ui/home/placePickerScreen/place_picker_screen.dart';
 import 'package:napon/ui/home/searchScreen/search_location_screen.dart';
 import 'package:napon/ui/home/searchScreen/search_location_viewmodel.dart';
+import 'package:napon/ui/routeScreen/route_viewmodel.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +12,7 @@ import 'ui/auth/auth_viewmodel.dart';
 import 'ui/home/homeScreen/home_viewmodel.dart';
 
 void main() {
+  setupLocator();
   runApp(const MyApp());
   Constants.setMapStyle();
 }
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => AuthViewModel()),
           ChangeNotifierProvider(create: (_) => HomeViewModel()),
           ChangeNotifierProvider(create: (_) => SearchLocationViewModel()),
+          ChangeNotifierProvider(create: (_) => RouteViewModel()),
         ],
         child: MaterialApp(
           title: 'Napon',

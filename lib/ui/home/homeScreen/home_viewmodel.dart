@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:napon/core/helpers/locator.dart';
 import 'package:napon/core/model/address.dart';
 import 'package:napon/core/services/map_services.dart';
 //import 'package:napon/model/address.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  Position? _currentPosition = Position(
+  Position? _currentPosition = const Position(
       latitude: 6.5244,
       longitude: 3.3792,
       timestamp: null,
@@ -31,7 +32,7 @@ class HomeViewModel extends ChangeNotifier {
     mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
 
     final addRessResponse =
-        await MapServices.getCordinateAddress(_currentPosition!);
+        await locator<MapServices>().getCordinateAddress(_currentPosition!);
 
     if (!addRessResponse.isSucessfull) {
       //do nothing || or show a notification that it failed to get base address

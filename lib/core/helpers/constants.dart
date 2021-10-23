@@ -17,7 +17,7 @@ class Constants {
   static Address address = Address(
       latitude: 6.5244,
       longitude: 3.3792,
-      placeFormattedAddress: "Demo",
+      placeFormattedAddress: "Lagos",
       placeId: "",
-      placeName: "Demo");
+      placeName: "Lagos");
 }

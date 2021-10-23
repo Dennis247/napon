@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:napon/core/helpers/app_colors.dart';
@@ -7,6 +7,7 @@ import 'package:napon/core/model/address.dart';
 import 'package:napon/core/model/autosugesstion.dart';
 import 'package:napon/ui/home/placePickerScreen/place_picker_screen.dart';
 import 'package:napon/ui/home/searchScreen/search_location_viewmodel.dart';
+import 'package:napon/ui/routeScreen/route_screen.dart';
 import 'package:napon/widgets/baseWidgets/connection_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
@@ -24,15 +25,17 @@ class SearchLocationScreen extends StatefulWidget {
 }
 
 class _SearchLocationScreenState extends State<SearchLocationScreen> {
-  // ignore: prefer_final_fields
   TextEditingController _myLoctionController = TextEditingController(text: "");
-  // ignore: prefer_final_fields
+
   TextEditingController _myDestinationController =
       TextEditingController(text: "");
 
   FocusNode focusDestination = FocusNode();
   bool focused = false;
   PickResult? _pickResult;
+
+  String _startPlaceId = "";
+  String _endPlaceId = "";
 
   @override
   void initState() {
@@ -107,13 +110,23 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
 
         if (vm.isMylocationSelected) {
           vm.setSugesstion(autoSuggestion);
+          _startPlaceId = autoSuggestion.placeId;
           _myLoctionController.text = autoSuggestion.mainText;
           FocusScope.of(context).requestFocus(focusDestination);
           vm.setIsMyLocationSelected(false);
         } else {
           vm.setSugesstion(autoSuggestion);
           FocusScope.of(context).unfocus();
+          _endPlaceId = autoSuggestion.placeId;
           _myDestinationController.text = autoSuggestion.mainText;
+        }
+        if (_myDestinationController.text.isNotEmpty &&
+            _myLoctionController.text.isNotEmpty) {
+          //go to route screen
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => RouteScreen(
+                  myLocationPlaceId: _startPlaceId,
+                  myDestinationPlaceId: _endPlaceId)));
         }
       },
       child: Padding(
@@ -255,9 +268,11 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
             var vm = context.read<SearchLocationViewModel>();
             if (vm.isMylocationSelected) {
               _myLoctionController.text = _pickResult!.formattedAddress!;
+              _startPlaceId = _pickResult!.placeId!;
               FocusScope.of(context).requestFocus(focusDestination);
             } else {
               _myDestinationController.text = _pickResult!.formattedAddress!;
+              _endPlaceId = _pickResult!.placeId!;
               FocusScope.of(context).unfocus();
             }
 
@@ -267,6 +282,15 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                   mainText: _pickResult!.formattedAddress!,
                   secondaryText: _pickResult!.formattedAddress!),
             );
+
+            if (_myDestinationController.text.isNotEmpty &&
+                _myLoctionController.text.isNotEmpty) {
+              //go to route screen
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RouteScreen(
+                      myLocationPlaceId: _startPlaceId,
+                      myDestinationPlaceId: _endPlaceId)));
+            }
           }
         },
         child: Container(
@@ -300,5 +324,3 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
     );
   }
 }
-
-class Keys {}
