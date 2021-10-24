@@ -4,6 +4,7 @@ import 'package:napon/ui/home/placePickerScreen/place_picker_screen.dart';
 import 'package:napon/ui/home/searchScreen/search_location_screen.dart';
 import 'package:napon/ui/home/searchScreen/search_location_viewmodel.dart';
 import 'package:napon/ui/routeScreen/route_viewmodel.dart';
+import 'package:napon/ui/routeScreen/trip_duration_viewmodel.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => HomeViewModel()),
           ChangeNotifierProvider(create: (_) => SearchLocationViewModel()),
           ChangeNotifierProvider(create: (_) => RouteViewModel()),
+          ChangeNotifierProvider(create: (_) => TripDurationViewModel()),
         ],
         child: MaterialApp(
           title: 'Napon',

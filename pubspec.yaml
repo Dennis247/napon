@@ -60,6 +60,7 @@ dev_dependencies:
   font_awesome_flutter: ^9.1.0
   maps_toolkit: ^2.0.0
   get_it: ^7.2.0
+  functional_widget: ^0.9.1
 
 
   

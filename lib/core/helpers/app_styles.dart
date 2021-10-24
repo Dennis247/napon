@@ -126,7 +126,7 @@ class AppStyles {
   static final cardMediumBoldDarkTextStyle = GoogleFonts.poppins(
     textStyle: TextStyle(
       color: Colors.black,
-      fontSize: 2.8.h,
+      fontSize: 2.0.h,
       fontWeight: FontWeight.w700,
     ),
   );

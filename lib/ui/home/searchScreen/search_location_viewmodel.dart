@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:napon/core/helpers/constants.dart';
 import 'package:napon/core/helpers/locator.dart';
-import 'package:napon/core/helpers/request_helper.dart';
 import 'package:napon/core/model/autosugesstion.dart';
 import 'package:napon/core/services/map_services.dart';
 

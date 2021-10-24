@@ -15,6 +15,8 @@ import 'package:napon/core/model/address.dart';
 import 'package:napon/core/model/direction_details.dart';
 import 'package:napon/core/services/map_services.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mtk;
+import 'package:napon/ui/routeScreen/trip_duration_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class RouteViewModel with ChangeNotifier {
   String _startId = "";
@@ -61,6 +63,7 @@ class RouteViewModel with ChangeNotifier {
 
   BitmapDescriptor? _taxiMarkerIcon;
   BitmapDescriptor get taxiMarkerIcon => _taxiMarkerIcon!;
+
   void setTaxiIconMarker() {
     BitmapDescriptor.fromAssetImage(
             const ImageConfiguration(devicePixelRatio: 2.2),
@@ -215,13 +218,11 @@ class RouteViewModel with ChangeNotifier {
     } else {
       _bounds = LatLngBounds(southwest: from, northeast: to);
     }
-
-    //  _mapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 70));
   }
 
 //Stream to update current user location
   StreamSubscription<Position>? _taxiPositionStream;
-  void setTaxiLocationUpdate(BuildContext context) {
+  void setNapLocationUpdate(BuildContext context) {
     _taxiPositionStream = Geolocator.getPositionStream(
             desiredAccuracy: LocationAccuracy.bestForNavigation,
             distanceFilter: 10)
@@ -229,6 +230,7 @@ class RouteViewModel with ChangeNotifier {
       final currentPosition = event;
 
       LatLng pos = LatLng(currentPosition.latitude, currentPosition.longitude);
+
       var rotation = locator<MapServices>().getMarkerRotation(
           mtk.LatLng(mostRecentPos.latitude, mostRecentPos.longitude),
           mtk.LatLng(pos.latitude, pos.longitude));
@@ -245,12 +247,12 @@ class RouteViewModel with ChangeNotifier {
       _markers.removeWhere((marker) => marker.markerId.value == "moving");
       _markers.add(taxiMarker);
       mostRecentPos = pos;
-      var position = pos;
 
-      //   var destination = _tripDetails.destination;
-      //   Provider.of<TripDurationViewModel>(context, listen: false)
-      //       .updateTripDetails(position, destination);
-      //   notifyListeners();
+      var destination =
+          LatLng(_endPlaceAddress.latitude!, _endPlaceAddress.longitude!);
+      Provider.of<TripDurationViewModel>(context, listen: false)
+          .updateTripDetails(pos, destination);
+      notifyListeners();
     });
   }
 }

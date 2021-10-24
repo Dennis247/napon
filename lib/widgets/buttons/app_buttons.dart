@@ -23,7 +23,7 @@ class AppButton extends StatelessWidget {
       required this.onTap,
       this.isDisabled = false,
       this.disabledColor = const Color(0xffe6eefc),
-      this.buttonColor = const Color(0xff0058e5),
+      this.buttonColor = Colors.green,
       this.isLoading = false,
       this.height,
       this.curveRadius = 10.0,
