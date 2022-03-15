@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:napon/core/helpers/locator.dart';
+import 'package:napon/ui/alarm/alarm_screen.dart';
+import 'package:napon/ui/alarm/alarm_viewmodel.dart';
+import 'package:napon/ui/home/homeScreen/home_screen.dart';
 import 'package:napon/ui/home/placePickerScreen/place_picker_screen.dart';
 import 'package:napon/ui/home/searchScreen/search_location_screen.dart';
 import 'package:napon/ui/home/searchScreen/search_location_viewmodel.dart';
@@ -32,6 +35,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => SearchLocationViewModel()),
           ChangeNotifierProvider(create: (_) => RouteViewModel()),
           ChangeNotifierProvider(create: (_) => TripDurationViewModel()),
+          ChangeNotifierProvider(create: (_) => AlarmViewModel()),
         ],
         child: MaterialApp(
           title: 'Napon',
@@ -40,9 +44,10 @@ class MyApp extends StatelessWidget {
 
             primarySwatch: Colors.green,
           ),
-          home: SearchLocationScreen(initialAddress: Constants.address),
+          home: const AlarmScreen(),
           routes: {
-            PlacePickerScreen.routeName: (context) => const PlacePickerScreen()
+            PlacePickerScreen.routeName: (context) => const PlacePickerScreen(),
+            HomeScreen.routeName: (context) => const HomeScreen()
           },
         ),
       );

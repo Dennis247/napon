@@ -22,7 +22,7 @@ class HomeViewModel extends ChangeNotifier {
   Address? _pickUpAddress;
   Address? get pickUpAddress => _pickUpAddress;
 
-  Future<void> getCurrentPosition(GoogleMapController mapController) async {
+  Future<bool> getCurrentPosition(GoogleMapController mapController) async {
     _currentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
 
@@ -36,7 +36,7 @@ class HomeViewModel extends ChangeNotifier {
 
     if (!addRessResponse.isSucessfull) {
       //do nothing || or show a notification that it failed to get base address
-      return;
+      return false;
     }
     //set pick up address
     _pickUpAddress = addRessResponse.data as Address;
@@ -46,5 +46,7 @@ class HomeViewModel extends ChangeNotifier {
         placeFormattedAddress: _pickUpAddress!.placeFormattedAddress,
         placeId: _pickUpAddress!.placeId,
         placeName: _pickUpAddress!.placeName);
+
+    return true;
   }
 }
